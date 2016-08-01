@@ -27,9 +27,9 @@ def callback(data):
     # ffe2 = data.tactiles[0].electrodes[1]
     ffe3 = data.tactiles[0].electrodes[2]
     ffe4 = data.tactiles[0].electrodes[3]
-    if (ffe1 < 3470) and (ffe3 < 3500) and (ffe4 < 3600):
-        hand_commander.move_to_joint_value_target_unsafe(soft_open, 1, True)
-        hand_commander.move_to_joint_value_target_unsafe(start, 3, True)
+    if (ffe1 < 3550) and (ffe3 < 3600) and (ffe4 < 3650):
+        # hand_commander.move_to_joint_value_target_unsafe(soft_open, 1, True)
+        hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
         time.sleep(1)
         rospy.signal_shutdown("Slip was Detected")
 
@@ -41,8 +41,9 @@ def listen():
 
 hand_commander.move_to_joint_value_target_unsafe(start, 3, True)
 hand_commander.move_to_joint_value_target_unsafe(close, 3, True)
+time.sleep(2)
 
-listen()
+# listen()
 
 
 

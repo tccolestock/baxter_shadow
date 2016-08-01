@@ -9,13 +9,13 @@ import msgpack
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5555")
+socket.bind("tcp://*:5556")
 
 
 def callback(bios):
     first_pdc = bios.tactiles[0].pdc
     thumb_pdc = bios.tactiles[4].pdc
-    if (first_pdc > 2300) and (thumb_pdc > 1750):
+    if (first_pdc > 2300) and (thumb_pdc > 1700):
         msg = 1
     else:
         msg = 0

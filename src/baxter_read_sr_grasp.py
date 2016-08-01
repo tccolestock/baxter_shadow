@@ -9,13 +9,13 @@ import time
 
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
-socket.connect("tcp://localhost:5555")
+socket.connect("tcp://localhost:5556")
 socket.setsockopt(zmq.SUBSCRIBE, b'')
 
 
 def talker():
     rospy.init_node("read_sr_grip_logic", anonymous=True)
-    pub_handle = rospy.Publisher("sr_grip_logic", UInt8, queue_size=10)
+    pub_handle = rospy.Publisher("sr_grip_logic", UInt8, queue_size=0)
     time.sleep(1)
     rate_handle = rospy.Rate(500) #hz
     while not rospy.is_shutdown():
