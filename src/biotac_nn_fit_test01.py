@@ -12,7 +12,7 @@ import numpy.matlib as npm # for: npm.repmat()
 
 #######################################################
 
-def nnfittingtest02result(x1):
+def nnfittingtest02result(x1): # input all 24 electrodes, and Pac1 in column array
     # ---------------------- Input Layer ----------------------------------------------------
     x1_step1_xoffset = np.matrix( \
         [\
