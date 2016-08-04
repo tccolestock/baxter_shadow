@@ -88,7 +88,7 @@ def callback(data):
         time.sleep(1)
         rospy.signal_shutdown("Slip was Detected")
 
-def callback2(data): 42
+def callback2(data):
     features = list(data.tactiles[0].electrodes) # comes in as a Tuple, convert to list
     features.append(data.tactiles[0].pac1) # append the Pac1 value
     features = np.matrix(features) # convert list to numpy matrix
@@ -260,7 +260,7 @@ def mapminmax_reverse(y,settings_gain,settings_xoffset,settings_ymin):
 #---------------------------------------------------------------------------------
 
 def listen():
-    rospy.Subscriber("/rh/tactile/", BiotacAll, callback3)
+    rospy.Subscriber("/rh/tactile/", BiotacAll, callback2)
     rospy.spin()
 
 # hand_commander.move_to_joint_value_target_unsafe(start, 3, True)
