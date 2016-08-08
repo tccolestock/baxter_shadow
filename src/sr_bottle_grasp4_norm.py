@@ -81,12 +81,12 @@ soft_open = { \
                 'rh_MFJ1': 0.014565158522349297,    'rh_MFJ3': 0.4407150002695516,      \
                 'rh_MFJ2': 0.7245574605990543,      'rh_MFJ4': -0.005447683603367941,   \
                 'rh_WRJ2': -0.106417846398269,      'rh_WRJ1': -0.07804339747071865     \
+            }
 
-def callback4(data):
+def callback(data):
     realtime = list(data.tactiles[0].electrodes) # comes in as a Tuple, convert to list
     realtime.append(data.tactiles[0].pac1) # append the Pac1 value
     realtime.append(data.tactiles[0].pdc)
-
     if slip.flag == 0:
         slip.rebase(realtime)
     else:
@@ -104,6 +104,7 @@ def callback4(data):
             hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
             time.sleep(1)
             rospy.signal_shutdown("Slip was Detected")
+
 
 #######################################################
 
@@ -258,12 +259,14 @@ def mapminmax_reverse(y,settings_gain,settings_xoffset,settings_ymin):
 #---------------------------------------------------------------------------------
 
 def listen():
-    rospy.Subscriber("/rh/tactile/", BiotacAll, callback4)
+    rospy.Subscriber("/rh/tactile/", BiotacAll, callback)
     rospy.spin()
 
 if __name__ == '__main__':
     hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
     hand_commander.move_to_joint_value_target_unsafe(close, 2, True)
     slip = Slip()
-    time.sleep(1)
+    # b = BiotacAll()
+    # print(b._md5sum)
+    time.sleep(8)
     listen()
