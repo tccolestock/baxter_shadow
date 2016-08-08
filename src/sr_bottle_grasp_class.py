@@ -4,7 +4,7 @@ from __future__ import division
 import rospy
 from std_msgs.msg import String, Float32, UInt8
 # from sr_robot_commander.sr_arm_commander import SrArmCommander
-# from sr_robot_commander.sr_hand_commander import SrHandCommander
+from sr_robot_commander.sr_hand_commander import SrHandCommander
 from sr_robot_msgs.msg import BiotacAll
 import time
 import numpy as np # for: exp(), .shape
@@ -14,7 +14,7 @@ import numpy.matlib as npm # for: npm.repmat()
 rospy.init_node("sr_grasp", anonymous=True)
 
 # arm_commander = SrArmCommander()
-# hand_commander = SrHandCommander()
+hand_commander = SrHandCommander()
 time.sleep(1)
 
 class Slip(object):
@@ -308,8 +308,8 @@ def listen():
 # time.sleep(2)
 
 if __name__ == '__main__':
-    # hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
-    # hand_commander.move_to_joint_value_target_unsafe(close, 2, True)
+    hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
+    hand_commander.move_to_joint_value_target_unsafe(close, 2, True)
     slip = Slip()
     time.sleep(2)
     listen()
