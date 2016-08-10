@@ -22,7 +22,7 @@ time.sleep(1)
 class Slip(object):
     """docstring for Slip"""
     def __init__(self):
-        self.last3 = [0]*5
+        self.last3 = [0]*15
         self.mvavg = 0
         self.base = [] #np.matrix( np.zeros((26,1)) )
         self.flag = 0
@@ -98,7 +98,8 @@ def callback(data):
         features = np.matrix(features) # convert list to numpy matrix
         angle = nnfitting(features.T) # transpose matrix to create column vector(s)
         slip.new(angle)
-        print("slip: %f" % slip.mvavg)
+        # print("slip: %f" % slip.mvavg)
+        print("slip: %f" % angle)
         if (slip.mvavg > 170) and (slip.mvavg < 190):
             print("Upward slip detected!")
             hand_commander.move_to_joint_value_target_unsafe(start, 1, True)
@@ -268,5 +269,5 @@ if __name__ == '__main__':
     slip = Slip()
     # b = BiotacAll()
     # print(b._md5sum)
-    time.sleep(8)
+    time.sleep(1)
     listen()
