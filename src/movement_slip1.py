@@ -87,6 +87,7 @@ def callback(data):
             joint_goals = hand_start
             hand_commander.move_to_joint_value_target_unsafe(joint_goals, 2, True)
             # Move back to start
+            time.sleep(2)
             joint_goals = arm_start
             arm_commander.move_to_joint_value_target_unsafe(joint_goals,5,True)
 
@@ -360,7 +361,7 @@ if __name__ == '__main__':
     joint_goals = arm_release
     arm_commander.move_to_joint_value_target_unsafe(joint_goals,5, True)
 
-    time.sleep(1)
+    time.sleep(2)
     listen()
 
 

@@ -130,9 +130,9 @@ joint_goals = arm_release
 arm_commander.move_to_joint_value_target_unsafe(joint_goals,5, True)
 
 # Release the object
-joint_goals = hand_start
-hand_commander.move_to_joint_value_target_unsafe(joint_goals, 2, True)
-
-# Move back to start
-joint_goals = arm_start
-arm_commander.move_to_joint_value_target_unsafe(joint_goals,5,True)
+# joint_goals = hand_start
+# hand_commander.move_to_joint_value_target_unsafe(joint_goals, 2, True)
+#
+# # Move back to start
+# joint_goals = arm_start
+# arm_commander.move_to_joint_value_target_unsafe(joint_goals,5,True)
