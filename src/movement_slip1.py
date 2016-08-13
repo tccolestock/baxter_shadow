@@ -30,8 +30,16 @@ from sr_robot_msgs.msg import BiotacAll
 import time
 import numpy as np # for: exp(), .shape, array, matrix
 import numpy.matlib as npm # for: npm.repmat()
+import zmq
+import msgpack
+
 
 rospy.init_node("move_test", anonymous=True)
+
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.bind("tcp://*:5556")
+
 
 hand_commander = SrHandCommander()
 arm_commander = SrArmCommander()
@@ -71,6 +79,7 @@ def callback(data):
     if slip.flag == 0:
         slip.rebase(realtime)
     else:
+        checkGrasp(data) # check that shadow has the object and send boolean to Baxter
         features = np.array([0]*26)
         s = sum(realtime[:24])
         s = s/(100*1000) # *100 to make it a %, *1000 to scale it to same mag as pressure
@@ -81,18 +90,30 @@ def callback(data):
         slip.new(angle)
         # print("slip: %f" % slip.mvavg)
         print("slip: %f" % angle)
-        if (slip.mvavg > 170) and (slip.mvavg < 190):
+        if (slip.mvavg > 179) and (slip.mvavg < 190):
             print("Upward slip detected!")
             # Release the object
             joint_goals = hand_start
             hand_commander.move_to_joint_value_target_unsafe(joint_goals, 2, True)
             # Move back to start
-            time.sleep(2)
+            time.sleep(5)
             joint_goals = arm_start
             arm_commander.move_to_joint_value_target_unsafe(joint_goals,5,True)
 
             time.sleep(1)
             rospy.signal_shutdown("Slip was Detected")
+
+
+def checkGrasp(bios):
+    first_pdc = bios.tactiles[0].pdc
+    thumb_pdc = bios.tactiles[4].pdc
+    if (first_pdc > 2300) and (thumb_pdc > 1700):
+        msg = 1
+    else:
+        msg = 0
+    print(msg)
+    packed = msgpack.dumps(msg)
+    socket.send(packed)
 
 
 # =============== Define NN Fitting Function ===============
