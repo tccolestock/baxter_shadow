@@ -352,10 +352,7 @@ def mapminmax_reverse(y,settings_gain,settings_xoffset,settings_ymin):
 
 #---------------------------------------------------------------------------------
 
-def listen():
-    rospy.Subscriber("/rh/tactile/", BiotacAll, callback4)
-    rospy.spin()
-
+def listen(): rospy.Subscriber("/rh/tactile/", BiotacAll, callback4) rospy.spin()
 # hand_commander.move_to_joint_value_target_unsafe(start, 3, True)
 # hand_commander.move_to_joint_value_target_unsafe(close, 3, True)
 # time.sleep(2)
