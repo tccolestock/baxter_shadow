@@ -16,8 +16,6 @@ class BiotacData(object):
     """docstring for Slip"""
 
     def __init__(self):
-        self.base = []  # np.matrix( np.zeros((26,1)) )
-
         self._angle_window = [0]*5
         self.angle_mvavg = 0
 
@@ -95,37 +93,56 @@ class BiotacData(object):
         if name == "tdc":
             self.tdc_mvavg = sum(self._tdc_window)/len(self._tdc_window)
 
-    def baseline(self, x, name=None):
+    def baseline(self, name=None):
         if name == "electrodes":
-            self._elect_db.append(x)
             self._elect_mat = np.matrix(self._elect_db)
             self._elect_mat = self._elect_mat.T
             self.elect_base = np.average(self._elect_mat, 1)
         elif name == "pac0":
-            self._pac0_db.append(x)
             self._pac0_mat = np.array(self._pac0_db)
-            self.pac0_base = np.average(self._pac0_mat, 1)
+            self.pac0_base = np.average(self._pac0_mat)
+        elif name == "pac1":
+            self._pac1_mat = np.array(self._pac1_db)
+            self.pac1_base = np.average(self._pac1_mat)
+        elif name == "pdc":
+            self._pdc_mat = np.array(self._pdc_db)
+            self.pdc_base = np.average(self._pdc_mat)
+        elif name == "tac":
+            self._tac_mat = np.array(self._tac_db)
+            self.tac_base = np.average(self._tac_mat)
+        elif name == "tdc":
+            self._tdc_mat = np.array(self._tdc_db)
+            self.tdc_base = np.average(self._tdc_mat)
+
+    def database(self, x, name=None):
+        if name == "electrodes":
+            self._elect_db.append(x)
+            if len(self._elect_db) >= 50:
+                self.baseline(name="electrodes")
+        elif name == "pac0":
+            self._pac0_db.append(x)
+            if len(self._pac0_db) >= 50:
+                self.baseline(name="pac0")
         elif name == "pac1":
             self._pac1_db.append(x)
-            self._pac1_mat = np.array(self._pac1_db)
-            self.pac1_base = np.average(self._pac1_mat, 1)
+            if len(self._pac1_db) >= 50:
+                self.baseline(name="pac1")
         elif name == "pdc":
             self._pdc_db.append(x)
-            self._pdc_mat = np.array(self._pdc_db)
-            self.pdc_base = np.average(self._pdc_mat, 1)
+            if len(self._pdc_db) >= 50:
+                self.baseline(name="pdc")
         elif name == "tac":
             self._tac_db.append(x)
-            self._tac_mat = np.array(self._tac_db)
-            self.tac_base = np.average(self._tac_mat, 1)
+            if len(self._tac_db) >= 50:
+                self.baseline(name="tac")
         elif name == "tdc":
             self._tdc_db.append(x)
-            self._tdc_mat = np.array(self._tdc_db)
-            self.tdc_base = np.average(self._tdc_mat, 1)
+            if len(self._tdc_db) >= 50:
+                self.baseline(name="tdc")
         else:
             print("Proper name value not provided! ['electrdes', 'pac0', 'pac1', \
-                'pdc', 'tac', 'tdc']")
+            'pdc', 'tac', 'tdc']")
             return
-
 
 # =============== Define NN Fitting Function ===============
 

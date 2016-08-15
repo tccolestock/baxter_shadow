@@ -55,6 +55,11 @@ hand_commander = SrHandCommander()
 arm_commander = SrArmCommander()
 
 ff = snn.BiotacData()
+ff_elect_db = ff._elect_db
+# ff_angle_mvavg = ff.angle_mvavg
+# ff_pac1_mvavg = ff.pac1_mvavg
+# ff_pdc_mvavg = ff.pdc_mvavg
+
 # th = snn.BiotacData()
 
 time.sleep(1)
@@ -71,38 +76,34 @@ def callback(data):
     ff_electrodes = list(data.tactiles[0].electrodes)  # comes in as a Tuple
     ff_pac1 = int(data.tactiles[0].pac1)  # append the Pac1 value
     ff_pdc = int(data.tactiles[0].pdc)
-    if len(ff._elect_db < 50):
-        ff.baseline(ff_electrodes, name="electrodes")
-        ff.baseline(ff_pac1, name="pac1")
+    if len(ff_elect_db) < 50:
+        print("Establishing Pac1 and Electrode baselines...")
+        ff.database(ff_electrodes, name="electrodes")
+        ff.database(ff_pac1, name="pac1")
     else:
         features = np.array([0]*24)
         features[:24] = np.array(ff_electrodes[:24])
         features = np.matrix(features)  # convert list to numpy matrix
-        # print(features)
         # % diff from baseline:
         features = ((features.T - ff.elect_base)/ff.elect_base)*100
-        # print(features)
         angle = snn.fit_e24(features)  # must be a column matrix
         ff_pac1_zero = pac1_zero(ff_pac1)
-        ff_pdc_zero = pdcZero(ff_pdc)
+        ff_pdc_zero = pdc_zero(ff_pdc)
         ff.new(angle, name="angle")
         ff.new(ff_pac1_zero, name="pac1")
         ff.new(ff_pdc_zero, name="pdc")
         check_grasp()  # check that SR has an object and send boolean to Baxter
-        # print("ff: %f" % ff.mvavg)
         print("ff_angle: %+6.2f \t\t ff_pac1: %6.2f \t\t ff_pdc: %6.2f"
               % (ff.angle_mvavg, ff.pac1_mvavg, ff.pdc_mvavg))
         if (ff.pdc_mvavg > 50) and (ff.pac1_mvavg > 50) \
            and (170 < ff.angle_mvavg < 190):
 
             print("Upward slip detected!")
-            # Release the object
-            joint_goals = hand_start
+            joint_goals = hand_start  # Release the object
             hand_commander.move_to_joint_value_target_unsafe(
                 joint_goals, 2, True)
-            # Move back to start
             time.sleep(5)  # Provide enough time for Baxter to clear the area
-            joint_goals = arm_start
+            joint_goals = arm_start  # Move back to start
             arm_commander.move_to_joint_value_target_unsafe(
                 joint_goals, 5, True)
             time.sleep(1)
@@ -124,7 +125,7 @@ def pdc_zero(pdc):
 
 def pdc_callback(data):
     p = int(data.tactiles[0].pdc)
-    ff.pdc_baseline(p)
+    ff.database(p, name="pdc")
 
 
 def check_grasp():
@@ -229,13 +230,14 @@ arm_release = {
 if __name__ == '__main__':
     # Move arm and hand to start position
     joint_goals = arm_start
-    arm_commander.move_to_joint_value_target_unsafe(joint_goals, 8, False)
+    arm_commander.move_to_joint_value_target_unsafe(joint_goals, 5, True)
     joint_goals = hand_start
-    hand_commander.move_to_joint_value_target_unsafe(joint_goals, 8, False)
+    hand_commander.move_to_joint_value_target_unsafe(joint_goals, 5, True)
     # ?? Check for object here using Biotacs ??
     while True:  # find pdc baseline
+        print("Establishing Pdc baseline...")
         rospy.Subscriber("rh/tactile", BiotacAll, pdc_callback)
-        if len(ff.pdc_db) >= 50:
+        if len(ff._pdc_db) >= 50:
             break
 
     # Move arm to pickup location
@@ -248,7 +250,7 @@ if __name__ == '__main__':
 
     # Exit the pickup zone
     joint_goals = arm_exit_pickup
-    arm_commander.move_to_joint_value_target_unsafe(joint_goals, 5, True)
+    arm_commander.move_to_joint_value_target_unsafe(joint_goals, 3, True)
 
     # Go to the midway point
     joint_goals = arm_midway
