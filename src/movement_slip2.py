@@ -174,13 +174,14 @@ def callback(data):
 
 
 def checkGrasp(bios):
-    first_pdc = bios.tactiles[0].pdc
-    thumb_pdc = bios.tactiles[4].pdc
-    if (first_pdc > 2300) and (thumb_pdc > 1700):
+    # first_pdc = bios.tactiles[0].pdc
+    # thumb_pdc = bios.tactiles[4].pdc
+    # if (first_pdc > 2300) and (thumb_pdc > 1700):
+    if (ff.pdc_mvavg > 50):
         msg = 1
     else:
         msg = 0
-    print(msg)
+    # print(msg)
     packed = msgpack.dumps(msg)
     socket.send(packed)
 

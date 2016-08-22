@@ -62,7 +62,7 @@ ff_elect_db = ff._elect_db
 
 # th = snn.BiotacData()
 
-time.sleep(1)
+time.sleep(0.1)
 
 
 # =============== Define Listen (Subscriber) Function ===============
