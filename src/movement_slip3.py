@@ -54,6 +54,8 @@ socket.bind("tcp://*:5556")
 hand_commander = SrHandCommander()
 arm_commander = SrArmCommander()
 
+rate_handle = rospy.Rate(100) #hz
+
 ff = snn.BiotacData()
 ff_elect_db = ff._elect_db
 # ff_angle_mvavg = ff.angle_mvavg
@@ -62,12 +64,15 @@ ff_elect_db = ff._elect_db
 
 # th = snn.BiotacData()
 
+pub = rospy.Publisher("slip_angle", Float32, queue_size=10)
+
 time.sleep(0.1)
 
 
 # =============== Define Listen (Subscriber) Function ===============
 def listen():
     rospy.Subscriber("/rh/tactile/", BiotacAll, callback)
+    rate_handle.sleep()
     rospy.spin()
 
 
@@ -95,6 +100,7 @@ def callback(data):
         check_grasp()  # check that SR has an object and send boolean to Baxter
         print("ff_angle: %+6.2f \t\t ff_pac1: %6.2f \t\t ff_pdc: %6.2f"
               % (ff.angle_mvavg, ff.pac1_mvavg, ff.pdc_mvavg))
+        pub.publish(ff.angle_mvavg)
         if (ff.pdc_mvavg > 50) and (ff.pac1_mvavg > 50) \
            and (170 < ff.angle_mvavg < 190):
 
@@ -237,6 +243,7 @@ if __name__ == '__main__':
     while True:  # find pdc baseline
         print("Establishing Pdc baseline...")
         rospy.Subscriber("rh/tactile", BiotacAll, pdc_callback)
+        rate_handle.sleep()
         if len(ff._pdc_db) >= 50:
             break
 

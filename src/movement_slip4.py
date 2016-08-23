@@ -568,7 +568,7 @@ if __name__ == '__main__':
         rospy.Subscriber("rh/tactile", BiotacAll, pdc_callback)
         rate_handle.sleep()
         if len(ff._pdc_db) >= 50:
-            print(ff._pdc_db)
+            # print(ff._pdc_db)
             break
 
     # Move arm to pickup location
