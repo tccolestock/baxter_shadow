@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import rospy
-
 import numpy as np
 
 from baxter_shadow.srv import PdcBaseline
@@ -9,7 +8,8 @@ from sr_robot_msgs.msg import BiotacAll, Biotac
 
 
 rospy.init_node("pdc_baseline_server", anonymous=True)
-rate_handle = rospy.Rate(100) #hz
+rate_handle = rospy.Rate(100)  # hz
+
 
 def server():
     s = rospy.Service("pdc_baseline", PdcBaseline, base)
