@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import division
+__author__ = "Thomas Colestock"
 import rospy
 from std_msgs.msg import String, Float32, UInt8
 from sr_robot_msgs.msg import BiotacAll
@@ -14,8 +15,8 @@ socket.bind("tcp://*:5556")
 
 def callback(bios):
     first_pdc = bios.tactiles[0].pdc
-    thumb_pdc = bios.tactiles[4].pdc
-    if (first_pdc > 2300) and (thumb_pdc > 1700):
+    # thumb_pdc = bios.tactiles[4].pdc
+    if (first_pdc > 2300): # and (thumb_pdc > 1700):
         msg = 1
     else:
         msg = 0
