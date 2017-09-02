@@ -77,8 +77,8 @@ if __name__ == '__main__':
     joint_goals = hand_start
     hand_commander.move_to_joint_value_target_unsafe(joint_goals, 3.0, True)
 
-    # joint_goals = pickup
-    # arm_commander.move_to_joint_value_target_unsafe(joint_goals,2,True)
+    joint_goals = pickup
+    arm_commander.move_to_joint_value_target_unsafe(joint_goals,5,True)
     #
     # joint_goals = hand_close
     # hand_commander.move_to_joint_value_target_unsafe(joint_goals, 5, True)
