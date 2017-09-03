@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Send Shadow Slip to Baxter
+
 from __future__ import division
 __author__ = "Thomas Colestock & Moaed Abd"
 import rospy

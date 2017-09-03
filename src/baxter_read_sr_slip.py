@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+# Baxter reads SR Slip and Publishes to topics
 from __future__ import division
 __author__ = "Thomas Colestock & Moaed Abd"
 import rospy

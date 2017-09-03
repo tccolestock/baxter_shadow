@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+# Send Shadow Grasp to Baxter
 from __future__ import division
 __author__ = "Thomas Colestock"
 import rospy
